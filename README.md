@@ -1,22 +1,20 @@
-# serve-static
+# serve-static-throttle
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
-[![Linux Build][travis-image]][travis-url]
-[![Windows Build][appveyor-image]][appveyor-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
-[![Gratipay][gratipay-image]][gratipay-url]
+
+#This is fork of  [serve-static](https://npmjs.org/package/serve-static) with `Network Speed Throttle` option
 
 ## Install
 
 ```sh
-$ npm install serve-static
+$ npm install serve-static-throttle
 ```
 
 ## API
 
 ```js
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 ```
 
 ### serveStatic(root, options)
@@ -28,6 +26,11 @@ sending a 404 response, this module will instead call `next()` to move on
 to the next middleware, allowing for stacking and fall-backs.
 
 #### Options
+
+##### throttle
+
+Enables network throttling , limits download speed, defaults to {bps : 1024 * 1024},
+`bps` is bytes per second. You can pass parameters same as [throttle](https://npmjs.org/package/throttle).
 
 ##### acceptRanges
 
@@ -125,7 +128,7 @@ the arguments are:
 ```js
 var finalhandler = require('finalhandler')
 var http = require('http')
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 
 // Serve up public/ftp folder
 var serve = serveStatic('public/ftp', {'index': ['index.html', 'index.htm']})
@@ -145,7 +148,7 @@ server.listen(3000)
 var contentDisposition = require('content-disposition')
 var finalhandler = require('finalhandler')
 var http = require('http')
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 
 // Serve up public/ftp folder
 var serve = serveStatic('public/ftp', {
@@ -175,7 +178,7 @@ This is a simple example of using Express.
 
 ```js
 var express = require('express')
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 
 var app = express()
 
@@ -191,7 +194,7 @@ a fallback.
 
 ```js
 var express = require('express')
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 
 var app = express()
 
@@ -208,7 +211,7 @@ is for 1 day.
 
 ```js
 var express = require('express')
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static-throttle')
 
 var app = express()
 
@@ -232,7 +235,7 @@ function setCustomCacheControl (res, path) {
 [MIT](LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/serve-static.svg
-[npm-url]: https://npmjs.org/package/serve-static
+[npm-url]: https://npmjs.org/package/serve-static-throttle
 [travis-image]: https://img.shields.io/travis/expressjs/serve-static/master.svg?label=linux
 [travis-url]: https://travis-ci.org/expressjs/serve-static
 [appveyor-image]: https://img.shields.io/appveyor/ci/dougwilson/serve-static/master.svg?label=windows
