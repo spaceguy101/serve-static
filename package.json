@@ -1,12 +1,12 @@
 {
-  "name": "server-static-throttle",
+  "name": "serve-static-throttle",
   "description": "Serve static files with network speed throttle option",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": "Douglas Christopher Wilson <doug@somethingdoug.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spaceguy101/serve-static-throttle"
+    "url": "git+https://github.com/spaceguy101/serve-static-throttle.git"
   },
   "dependencies": {
     "encodeurl": "~1.0.1",
