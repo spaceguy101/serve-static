@@ -108,6 +108,13 @@ describe('serveStatic()', function () {
       })
     })
 
+    it('should support precondition checks', function (done) {
+      request(server)
+      .get('/todo.txt')
+      .set('If-Match', '"foo"')
+      .expect(412, done)
+    })
+
     it('should serve zero-length files', function (done) {
       request(server)
       .get('/empty.txt')
@@ -396,6 +403,20 @@ describe('serveStatic()', function () {
     })
   })
 
+  describe('immutable', function () {
+    it('should default to false', function (done) {
+      request(createServer(fixtures))
+      .get('/nums')
+      .expect('Cache-Control', 'public, max-age=0', done)
+    })
+
+    it('should set immutable directive in Cache-Control', function (done) {
+      request(createServer(fixtures, {'immutable': true, 'maxAge': '1h'}))
+      .get('/nums')
+      .expect('Cache-Control', 'public, max-age=3600, immutable', done)
+    })
+  })
+
   describe('lastModified', function () {
     describe('when false', function () {
       it('should not include Last-Modifed', function (done) {
@@ -420,14 +441,14 @@ describe('serveStatic()', function () {
     it('should accept string', function (done) {
       request(createServer(fixtures, {'maxAge': '30d'}))
       .get('/todo.txt')
-      .expect('cache-control', 'public, max-age=' + 60 * 60 * 24 * 30)
+      .expect('cache-control', 'public, max-age=' + (60 * 60 * 24 * 30))
       .expect(200, done)
     })
 
     it('should be reasonable when infinite', function (done) {
       request(createServer(fixtures, {'maxAge': Infinity}))
       .get('/todo.txt')
-      .expect('cache-control', 'public, max-age=' + 60 * 60 * 24 * 365)
+      .expect('cache-control', 'public, max-age=' + (60 * 60 * 24 * 365))
       .expect(200, done)
     })
   })
@@ -473,7 +494,14 @@ describe('serveStatic()', function () {
       .get('/snow')
       .expect('Location', '/snow%20%E2%98%83/')
       .expect('Content-Type', /html/)
-      .expect(301, 'Redirecting to <a href="/snow%20%E2%98%83/">/snow%20%E2%98%83/</a>\n', done)
+      .expect(301, />Redirecting to <a href="\/snow%20%E2%98%83\/">\/snow%20%E2%98%83\/<\/a></, done)
+    })
+
+    it('should respond with default Content-Security-Policy', function (done) {
+      request(server)
+      .get('/users')
+      .expect('Content-Security-Policy', "default-src 'self'")
+      .expect(301, done)
     })
 
     it('should not redirect incorrectly', function (done) {
@@ -691,6 +719,34 @@ describe('serveStatic()', function () {
       .get('//todo@txt')
       .expect('Location', '/todo@txt/')
       .expect(301, done)
+    })
+  })
+
+  //
+  // NOTE: This is not a real part of the API, but
+  //       over time this has become something users
+  //       are doing, so this will prevent unseen
+  //       regressions around this use-case.
+  //
+  describe('when mounted "root" as a file', function () {
+    var server
+    before(function () {
+      server = createServer(fixtures + '/todo.txt', null, function (req) {
+        req.originalUrl = req.url
+        req.url = '/' + req.url.split('/').slice(2).join('/')
+      })
+    })
+
+    it('should load the file when on trailing slash', function (done) {
+      request(server)
+      .get('/todo')
+      .expect(200, '- groceries', done)
+    })
+
+    it('should 404 when trailing slash', function (done) {
+      request(server)
+      .get('/todo/')
+      .expect(404, done)
     })
   })
 

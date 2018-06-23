@@ -6,17 +6,21 @@ node_js:
   - "1.8"
   - "2.5"
   - "3.3"
-  - "4.4"
-  - "5.11"
-  - "6.2"
+  - "4.8"
+  - "5.12"
+  - "6.11"
+  - "7.10"
+  - "8.9"
 sudo: false
 cache:
   directories:
     - node_modules
 before_install:
+  # Skip updating shrinkwrap / lock
+  - "npm config set shrinkwrap false"
   # Setup Node.js version-specific dependencies
-  - "test $TRAVIS_NODE_VERSION != '0.8' || npm rm --save-dev eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard istanbul"
-
+  - "test $TRAVIS_NODE_VERSION != '0.8' || npm rm --save-dev istanbul"
+  - "test $(echo $TRAVIS_NODE_VERSION | cut -d. -f1) -ge 4 || npm rm --save-dev $(grep -E '\"eslint\\S*\"' package.json | cut -d'\"' -f2)"
   # Update Node.js modules
   - "test ! -d node_modules || npm prune"
   - "test ! -d node_modules || npm rebuild"

@@ -5,13 +5,20 @@
 
 #This is fork of  [serve-static](https://npmjs.org/package/serve-static) with `Network Speed Throttle` option
 
+
 ## Install
+
+This is a [Node.js](https://nodejs.org/en/) module available through the
+[npm registry](https://www.npmjs.com/). Installation is done using the
+[`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
 
 ```sh
 $ npm install serve-static-throttle
 ```
 
 ## API
+
+<!-- eslint-disable no-unused-vars -->
 
 ```js
 var serveStatic = require('serve-static-throttle')
@@ -41,7 +48,7 @@ of the `Range` request header.
 ##### cacheControl
 
 Enable or disable setting `Cache-Control` response header, defaults to
-true. Disabling this will ignore the `maxAge` option.
+true. Disabling this will ignore the `immutable` and `maxAge` options.
 
 ##### dotfiles
 
@@ -89,6 +96,14 @@ short-circuiting 404s for less overhead. This middleware will also reply to
 all methods.
 
 The default value is `true`.
+
+##### immutable
+
+Enable or disable the `immutable` directive in the `Cache-Control` response
+header, defaults to `false`. If set to `true`, the `maxAge` option should
+also be specified to enable caching. The `immutable` directive will prevent
+supported clients from making conditional requests during the life of the
+`maxAge` option to check if the file has changed.
 
 ##### index
 
@@ -157,7 +172,7 @@ var serve = serveStatic('public/ftp', {
 })
 
 // Set header to force download
-function setHeaders(res, path) {
+function setHeaders (res, path) {
   res.setHeader('Content-Disposition', contentDisposition(path))
 }
 
@@ -194,12 +209,17 @@ a fallback.
 
 ```js
 var express = require('express')
+<<<<<<< HEAD
 var serveStatic = require('serve-static-throttle')
+=======
+var path = require('path')
+var serveStatic = require('serve-static')
+>>>>>>> f287bd6c26ad2bfd0422c533b0358f2f4b16f7db
 
 var app = express()
 
-app.use(serveStatic(__dirname + '/public-optimized'))
-app.use(serveStatic(__dirname + '/public'))
+app.use(serveStatic(path.join(__dirname, 'public-optimized')))
+app.use(serveStatic(path.join(__dirname, 'public')))
 app.listen(3000)
 ```
 
@@ -211,11 +231,16 @@ is for 1 day.
 
 ```js
 var express = require('express')
+<<<<<<< HEAD
 var serveStatic = require('serve-static-throttle')
+=======
+var path = require('path')
+var serveStatic = require('serve-static')
+>>>>>>> f287bd6c26ad2bfd0422c533b0358f2f4b16f7db
 
 var app = express()
 
-app.use(serveStatic(__dirname + '/public', {
+app.use(serveStatic(path.join(__dirname, 'public'), {
   maxAge: '1d',
   setHeaders: setCustomCacheControl
 }))
@@ -244,5 +269,3 @@ function setCustomCacheControl (res, path) {
 [coveralls-url]: https://coveralls.io/r/expressjs/serve-static
 [downloads-image]: https://img.shields.io/npm/dm/serve-static.svg
 [downloads-url]: https://npmjs.org/package/serve-static
-[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
-[gratipay-url]: https://gratipay.com/dougwilson/
