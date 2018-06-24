@@ -1,9 +1,7 @@
 {
-
   "name": "serve-static-throttle",
   "description": "Serve static files with network speed throttle option",
-  "version": "1.0.3",
-
+  "version": "2.0.0",
   "author": "Douglas Christopher Wilson <doug@somethingdoug.com>",
   "license": "MIT",
   "repository": {
