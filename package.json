@@ -11,8 +11,8 @@
   "dependencies": {
     "encodeurl": "~1.0.2",
     "escape-html": "~1.0.3",
-    "send-throttle": "^1.0.1",
-    "parseurl": "~1.3.2"
+    "parseurl": "~1.3.2",
+    "send": "git+https://github.com/spaceguy101/send-throttle.git"
   },
   "devDependencies": {
     "eslint": "3.19.0",
